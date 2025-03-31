@@ -36,7 +36,7 @@ abstract class Resource {
         return null;
     }
 
-    protected async abstract getDisplay(): Promise<string>;
+    protected abstract getDisplay(): Promise<string>;
 
     protected async isShown(): Promise<boolean> {
         return Promise.resolve(this._config.get(`show.${this._configKey}`, false));
@@ -130,7 +130,7 @@ class Memory extends Resource {
     constructor(config: WorkspaceConfiguration) {
         super(config, true, "mem");
     }
-    
+
     async getDisplay() : Promise<string> {
         let unit = this._config.get('memunit', "GB");
         var memDivisor = MemMappings[unit];
@@ -145,7 +145,7 @@ class Network extends Resource {
 
     constructor(config: WorkspaceConfiguration) {
         super(config, true, "net");
-    
+
         // Network stats are requested through returning the delta between
         // multiple invocations
         this.getInterfaceStats();
@@ -162,7 +162,7 @@ class Network extends Resource {
 
     async getDisplay(): Promise<string> {
         // Not implemented
-        return ""; 
+        return "";
     }
 }
 
@@ -243,6 +243,7 @@ class ResMon {
         this._resources.push(new DiskSpace(this._config));
         this._resources.push(new CpuTemp(this._config));
         this._resources.push(new Network(this._config));
+        this._resources.push(new MemoryPressure(this._config));
     }
 
     public StartUpdating() {
@@ -253,7 +254,7 @@ class ResMon {
     public StopUpdating() {
         this._updating = false;
     }
-    
+
     private _getColor() : string {
         const defaultColor = "#FFFFFF";
 
@@ -300,6 +301,36 @@ class ResMon {
     dispose() {
         this.StopUpdating();
         this._statusBarItem.dispose();
+    }
+}
+
+class MemoryPressure extends Resource {
+    constructor(config: WorkspaceConfiguration) {
+        super(config, true, "mempressure");
+    }
+
+    protected async isShown(): Promise<boolean> {
+        return Promise.resolve(process.platform === 'darwin' && this._config.get("show.mempressure", true));
+    }
+
+    async getDisplay(): Promise<string> {
+        try {
+            const { exec } = require('child_process');
+            const util = require('util');
+            const execAsync = util.promisify(exec);
+
+            const { stdout } = await execAsync('memory_pressure -Q');
+            const match = stdout.match(/System-wide memory free percentage: (\d+)%/);
+
+            if (match) {
+                const freePercentage = parseInt(match[1]);
+                return `$(circuit-board) ${(100 - freePercentage).toFixed(this.getPrecision())}% pressure`;
+            }
+            return '';
+        } catch (error) {
+            console.error('Failed to get memory pressure:', error);
+            return '';
+        }
     }
 }
 
