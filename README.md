@@ -2,7 +2,7 @@
 
 ## Features
 
-Display CPU frequency, usage, memory consumption, and battery percentage remaining within the VSCode status bar.
+Display CPU frequency, usage, memory consumption, battery percentage remaining, and memory pressure (macOS only) within the VSCode status bar.
 
 ## Screenshots
 
@@ -27,6 +27,7 @@ Just the system information node module.
 - `resmon.mem.unit`: Unit used for the RAM consumption (GB-B).
 - `resmon.alignLeft`: Toggles the alignment of the status bar.
 - `resmon.color`: Color of the status bar text in hex code (for example, #FFFFFF is white). The color must be in the format #RRGGBB, using hex digits.
+- `resmon.show.mempressure`: Show memory pressure value (macOS only). Uses `memory_pressure -Q` command to display system memory pressure.
 
 ## Known Issues
 
@@ -36,33 +37,8 @@ A better solution for Windows CPU Usage would be great. I investigated alternati
 
 ## Change Log
 
-### [1.0.7]
-- Changed underlying CPU frequency API, added hiding battery/CPU temp information if the device lacks a battery/doesn't support CPU temp sensing, added some clarifications about CPU frequency behavior on Windows.
-
-### [1.0.6]
-
-- Added DiskSpace, CPU Temperature. Adjusted battery icon.
-
-### [1.0.5]
-
-- Refactored code heavily, addressed Github issue with memory.used versus memory.active.
-
-### [1.0.4]
-
-- Added icon for store.
-
-### [1.0.3]
-
-- Changed icons. Added choosable units.
-
-### [1.0.2]
-
-- Actually properly added systeminformation as a real dependency.
-
-### [1.0.1]
-
-- Properly added systeminformation as a real dependency
-
 ### [1.0.0]
 
-- Initial release
+- fork from <https://github.com/Njanderson/resmon.git>
+- Added memory pressure indicator feature for macOS using `memory_pressure -Q` command output
+- Updated all dependencies using `npx npm-check-updates -u`

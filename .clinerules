@@ -1,6 +1,3 @@
-memory_pressure -Q の出力
-System-wide memory free percentage: 66%
-
-を使ったメモリプレッシャー値表示機能を追加中．osがmacの時のみ利用可能
+memory_pressure -Q の出力を使ったmacでのみ利用可能なメモリプレッシャー値表示機能を追加した．
 
 依存パッケージをnpx npm-check-updates -uでアップデート済み

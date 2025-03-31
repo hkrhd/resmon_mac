@@ -2,7 +2,7 @@
     "name": "resourcemonitor4mac",
     "displayName": "Resource Monitor",
     "description": "Displays current CPU stats, memory/disk consumption, and battery percentage remaining.",
-    "version": "1.1.0",
+    "version": "1.0.0",
     "publisher": "hkrhd",
     "engines": {
         "vscode": "^1.98.0"
